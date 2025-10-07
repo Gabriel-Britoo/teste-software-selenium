@@ -7,29 +7,50 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $senha = $_POST["senha"];
 
-    $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+    $sql_verifica = "SELECT * FROM usuarios WHERE email = ?";
+    $stmt_verifica = $conexao->prepare($sql_verifica);
+    $stmt_verifica->bind_param("s", $email);
+    $stmt_verifica->execute();
+    $resultado = $stmt_verifica->get_result();
 
-    $sql_insercao = "INSERT usuarios (nome, email, senha) VALUES (?,?,?)";
-
-    $stmt = $conexao->prepare($sql_insercao);
-
-    $stmt->bind_param("sss", $nome, $email, $senha_hash);
-
-    if ($stmt->execute()) {
-        $_SESSION['mensagem_cadastro'] = "Cadastro bem sucedido!";
-
+    if ($resultado->num_rows > 0) {
+        $_SESSION['mensagem_erro'] = "Este e-mail já está cadastrado.";
         echo "<script>
-        alert('" . $_SESSION['mensagem_cadastro'] . "');
-        window.location.href = 'index.php';
-        </script>";
+            alert('" . $_SESSION['mensagem_erro'] . "');
+            window.location.href = 'cadastro.php';
+            </script>";
     } else {
-        echo "Erro ao cadastrar usuário: " . $conexao->error;
+        if (strlen($senha) >= 8) {
+            $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+
+            $sql_insercao = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
+            $stmt = $conexao->prepare($sql_insercao);
+            $stmt->bind_param("sss", $nome, $email, $senha_hash);
+
+            if ($stmt->execute()) {
+                $_SESSION['mensagem_cadastro'] = "Cadastro bem-sucedido!";
+                echo "<script>
+                    alert('" . $_SESSION['mensagem_cadastro'] . "');
+                    window.location.href = 'index.php';
+                    </script>";
+            } else {
+                echo "Erro ao cadastrar usuário: " . $conexao->error;
+            }
+
+            $stmt->close();
+        } else {
+            $_SESSION['mensagem_senha'] = "Senha muito curta! Deve ter pelo menos 8 caracteres.";
+            echo "<script>
+                alert('" . $_SESSION['mensagem_senha'] . "');
+                </script>";
+        }
     }
 
-    $stmt->close();
+    $stmt_verifica->close();
     $conexao->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
