@@ -1,7 +1,8 @@
 <?php
 include 'conexao.php';
+session_start();
 
-if($_SERVER["REQUEST_METHOD"] === "POST"){
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nome = $_POST["nome"];
     $email = $_POST["email"];
     $senha = $_POST["senha"];
@@ -14,10 +15,15 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
     $stmt->bind_param("sss", $nome, $email, $senha_hash);
 
-    if($stmt->execute()){
-        header("Location: dashboard.php");
+    if ($stmt->execute()) {
+        $_SESSION['mensagem_cadastro'] = "Cadastro bem sucedido!";
+
+        echo "<script>
+        alert('" . $_SESSION['mensagem_cadastro'] . "');
+        window.location.href = 'index.php';
+        </script>";
     } else {
-        echo "Erro ao cadastrar usuário: ".$conexao->error;
+        echo "Erro ao cadastrar usuário: " . $conexao->error;
     }
 
     $stmt->close();
@@ -26,12 +32,14 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cadastro_login.css">
     <title>Cadastrar</title>
 </head>
+
 <body>
     <section class="section-form">
         <form action="" method="POST">
@@ -48,8 +56,9 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
             <button type="submit">Cadastrar</button>
 
-            <p>Já possui uma conta? <a href="index.php">Entre agora!</a></p>
+            <p>Já possui uma conta? <a href="index.php">Entre!</a></p>
         </form>
     </section>
 </body>
+
 </html>

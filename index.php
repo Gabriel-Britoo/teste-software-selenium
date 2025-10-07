@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cadastro_login.css">
     <title>Entrar</title>
 </head>
+
 <body>
     <section class="section-form">
         <form action="" method="POST">
@@ -21,7 +23,7 @@
             session_start();
             include 'conexao.php';
 
-            if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $email = $_POST["email"];
                 $senha = $_POST["senha"];
 
@@ -29,13 +31,14 @@
 
                 $result = mysqli_query($conexao, $query);
 
-                if($result->num_rows > 0) {
+                if ($result->num_rows > 0) {
                     $usuario = $result->fetch_assoc();
 
-                    if (password_verify($senha, $usuario['senha'])){
+                    if (password_verify($senha, $usuario['senha'])) {
                         $_SESSION['usuario'] = $usuario;
+                        $_SESSION['mensagem_login'] = "Login bem-sucedido! Bem-vindo(a)!";
 
-                        header('Location: dashboard.php');
+                        echo "<script>alert('" . $_SESSION['mensagem_login'] . "');</script>";
                     } else {
                         echo "<p style='color:red;'>Senha incorreta</p>";
                     }
@@ -51,4 +54,5 @@
         </form>
     </section>
 </body>
+
 </html>
