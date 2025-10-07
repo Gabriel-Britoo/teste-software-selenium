@@ -40,10 +40,10 @@
 
                         echo "<script>alert('" . $_SESSION['mensagem_login'] . "');</script>";
                     } else {
-                        echo "<p style='color:red;'>Senha incorreta</p>";
+                        echo "<p style='color:red;'>Email ou senha incorretos</p>";
                     }
                 } else {
-                    echo "<p style='color:red;'>Email incorreto</p>";
+                    echo "<p style='color:red;'>Email ou senha incorretos</p>";
                 }
             }
             ?>
