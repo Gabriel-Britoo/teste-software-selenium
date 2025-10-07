@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <input type="text" name="nome" required>
 
             <label for="email">Email</label>
-            <input type="text" name="email" required>
+            <input type="email" name="email" required>
 
             <label for="senha">Senha</label>
             <input type="password" name="senha" required>

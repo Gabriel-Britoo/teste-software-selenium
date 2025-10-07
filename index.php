@@ -14,7 +14,7 @@
             <h1>Entrar na conta</h1>
 
             <label for="email">Email</label>
-            <input type="text" name="email" required>
+            <input type="email" name="email" required>
 
             <label for="senha">Senha</label>
             <input type="password" name="senha" required>
